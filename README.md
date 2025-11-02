@@ -1,4 +1,4 @@
-# Inference-Profiling-Puzzles
+# Inference Profiling and Optimization Guide
 > Note: Project is in the ideation stage, with the creation of puzzles in progress.
 
 Explore commonly faced profiling scenarios and develop an intuition for how to break down profiling problems and find the bottleneck.
