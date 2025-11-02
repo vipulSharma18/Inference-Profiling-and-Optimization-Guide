@@ -1,3 +1,4 @@
+# ref: https://github.com/pytorch/ao/blob/main/torchao/_models/llama/generate.py
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 # All rights reserved.
 
