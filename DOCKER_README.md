@@ -89,27 +89,33 @@ docker run --gpus all -it --rm \
 
 ## CI/CD with GitHub Actions
 
-The repository includes a GitHub Actions workflow (`.github/workflows/build-images.yml`) that:
+The repository includes three separate GitHub Actions workflows:
 
-- **Builds all three images** using a matrix strategy
-- **Runs sequentially** (max-parallel: 1) to manage GitHub runner resources
+1. `.github/workflows/build-torchao-float8.yml`
+2. `.github/workflows/build-gemlite-autotune.yml`
+3. `.github/workflows/build-torchinductor-cudagraph.yml`
+
+Each workflow:
+- **Builds its specific Docker image** independently
+- **Only runs when relevant files change** (path filtering)
 - **Caches Docker layers** and uv dependencies for faster builds
-- **Tests each image** to ensure it's working correctly
-- **Cleans up resources** after each build
+- **Tests the image** to ensure it's working correctly
+- **Cleans up resources** after the build
 
 ### Key Features
 
-1. **Resource Management**: Uses `max-parallel: 1` to prevent memory/storage issues
-2. **Layer Caching**: Leverages Docker BuildKit for efficient layer caching
-3. **uv Caching**: Caches Python dependencies managed by uv
-4. **Concurrency Control**: Prevents multiple builds from running simultaneously
+1. **Individual Status Badges**: Each workflow has its own status badge in the README
+2. **Path Filtering**: Workflows only trigger when their package or common_utils changes
+3. **Layer Caching**: Leverages Docker BuildKit for efficient layer caching
+4. **uv Caching**: Caches Python dependencies managed by uv
+5. **Resource Management**: Automatic cleanup after each build
 
-### Triggering the Workflow
+### Triggering the Workflows
 
-The workflow runs on:
-- Push to `main` branch
-- Pull requests to `main` branch
-- Manual trigger via GitHub Actions UI
+Each workflow runs on:
+- Push to `main` branch (only when relevant files change)
+- Pull requests to `main` branch (only when relevant files change)
+- Manual trigger via GitHub Actions UI (workflow_dispatch)
 
 ## Docker Image Features
 
@@ -168,7 +174,9 @@ Check:
 1. Make changes to code locally
 2. Test in Docker container with mounted volumes
 3. Commit changes (including updated lock files if dependencies changed)
-4. Push to GitHub - CI will build and test automatically
+4. Push to GitHub - CI will build and test the affected package(s) automatically
+   - Only the workflow for the changed package will run (thanks to path filtering)
+   - If `common_utils` changes, all three workflows will run
 
 ## Additional Notes
 
