@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    . $HOME/.cargo/env
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Set working directory
@@ -34,7 +35,7 @@ COPY torchinductor_cudagraph_memory/uv.lock /workspace/torchinductor_cudagraph_m
 
 # Install dependencies with uv (leverages cache)
 WORKDIR /workspace/torchinductor_cudagraph_memory
-RUN uv sync --frozen
+RUN /root/.cargo/bin/uv sync --frozen
 
 # Copy the rest of the application code
 COPY torchinductor_cudagraph_memory /workspace/torchinductor_cudagraph_memory

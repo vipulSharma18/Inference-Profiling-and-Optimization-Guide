@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    . $HOME/.cargo/env
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Set working directory
@@ -34,7 +35,7 @@ COPY gemlite_autotune/uv.lock /workspace/gemlite_autotune/
 
 # Install dependencies with uv (leverages cache)
 WORKDIR /workspace/gemlite_autotune
-RUN uv sync --frozen
+RUN /root/.cargo/bin/uv sync --frozen
 
 # Copy the rest of the application code
 COPY gemlite_autotune /workspace/gemlite_autotune
