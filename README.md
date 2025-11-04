@@ -69,11 +69,20 @@ Always go from top to bottom, or coarser profiling to fine-grained one, when opt
 
 ## Problems (Curation in progress):
 
+Run with docker:
+```
+docker pull ${problem_id}:main
+docker run --gpus all --cap-add=SYS_ADMIN -d ${problem_id}:main
+```
+
 **Problem 1**: TorchAO's `Float8WeightOnlyConfig` on RTX 4090 and RTX 5090 is much slower than the eager baseline.      
+`export problem_id=ghcr.io/vipulsharma18/inference-profiling-and-optimization-guide/torchao-float8`
 
 **Problem 2**: More graphs, more problems: Understanding the impact of CUDAGraphs on GPU memory usage by profiling.      
+`export problem_id=ghcr.io/vipulsharma18/inference-profiling-and-optimization-guide/torchinductor-cudagraph-memory`
 
 **Problem 3**: What's my autotune up to?: Understand optimizations that the autotuner does by using GemLite's Triton GEMM kernels for RTX 4090 as an example.        
+`export problem_id=ghcr.io/vipulsharma18/inference-profiling-and-optimization-guide/gemlite-autotune`
 
 ## References/Resources to learn the background:
 1. Nsight Systems Docs: https://docs.nvidia.com/nsight-systems/index.html
