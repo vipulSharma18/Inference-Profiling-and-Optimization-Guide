@@ -18,6 +18,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  NAMESPACE: ${{ github.repository }}
   IMAGE_NAME: torchao-float8
 
 jobs:
@@ -64,7 +65,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}
       - name: Build Docker image
         id: build-and-push
         uses: docker/build-push-action@v6
