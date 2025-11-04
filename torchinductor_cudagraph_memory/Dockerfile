@@ -48,4 +48,3 @@ RUN uv sync --frozen
 
 # Set the default command
 CMD ["/bin/bash"]
-

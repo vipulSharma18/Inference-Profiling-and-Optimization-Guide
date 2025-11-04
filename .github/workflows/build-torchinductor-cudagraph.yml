@@ -31,24 +31,6 @@ jobs:
           driver-opts: |
             image=moby/buildkit:latest
 
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-torchinductor-cudagraph-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-torchinductor-cudagraph-
-            ${{ runner.os }}-buildx-
-
-      - name: Cache uv dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/uv
-          key: ${{ runner.os }}-uv-torchinductor-cudagraph-${{ hashFiles('torchinductor_cudagraph_memory/pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-uv-torchinductor-cudagraph-
-            ${{ runner.os }}-uv-
-
       - name: cleanup space on github vm
         run: |
           rm -rf /usr/share/dotnet \
@@ -65,24 +47,14 @@ jobs:
           file: torchinductor_cudagraph_memory/Dockerfile
           push: false
           tags: torchinductor-cudagraph-memory:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
 
       - name: Test Docker image
         run: |
           docker run --rm torchinductor-cudagraph-memory:latest uv --version
           docker run --rm torchinductor-cudagraph-memory:latest python3.12 --version
 
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
       - name: Clean up Docker resources
         if: always()
         run: |
           docker system prune -af --volumes
           df -h
-
