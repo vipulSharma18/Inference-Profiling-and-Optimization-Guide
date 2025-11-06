@@ -7,7 +7,9 @@ export HF_HUB_ENABLE_HF_TRANSFER=1
 source /workspace/torchinductor_cudagraph_memory/.venv/bin/activate
 
 echo "[entrypoint] Running prepare script from common_utils."
-bash /workspace/common_utils/scripts/prepare.sh
+cd /workspace/common_utils
+bash scripts/prepare.sh
+cd /workspace
 echo "[entrypoint] entrypoint script complete"
 
 # Only exec if arguments are provided
