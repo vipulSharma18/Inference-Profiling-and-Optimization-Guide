@@ -22,3 +22,12 @@ python generate.py --checkpoint_path $CHECKPOINT_PATH/$MODEL_REPO/model.pth --co
 # fp8 dq, still wo: row-wise scaling factor
 python generate.py --checkpoint_path $CHECKPOINT_PATH/$MODEL_REPO/model.pth --compile --quantization float8dq-row --write_result benchmark_results.txt
 ```
+
+Use git sparse checkout for development of independent problems:
+```
+# Initialize sparse checkout in "cone mode" (simpler, folder-based)
+git sparse-checkout init --cone
+
+# Tell Git: "I only want to see these folders"
+git sparse-checkout set torchao_float8 common_utils
+```
