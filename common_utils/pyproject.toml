@@ -19,6 +19,7 @@ dependencies = [
     "torch",
     "torchao",
     "huggingface_hub",
+    "hf_transfer",
     "safetensors",
     "requests",
 ]
