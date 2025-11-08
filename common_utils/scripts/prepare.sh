@@ -4,16 +4,6 @@
 #
 # This source code is licensed under the BSD 3-Clause license found in the
 # LICENSE file in the root directory of this source tree.
-python scripts/download.py --repo_id unsloth/Meta-Llama-3.1-8B || {
-    echo "ERROR: Failed to download model from unsloth/Meta-Llama-3.1-8B"
-    echo "Continuing with next steps..."
-}
-
-python scripts/convert_hf_checkpoint.py --checkpoint_dir ~/checkpoints/unsloth/Meta-Llama-3.1-8B || {
-    echo "ERROR: Failed to convert checkpoint at checkpoints/unsloth/Meta-Llama-3.1-8B"
-    echo "Continuing with next steps..."
-}
-
 echo "[entrypoint] running sshd checks"
 
 echo "[entrypoint] ensuring /var/run/sshd and /etc/ssh/ exists"
@@ -41,3 +31,15 @@ chmod 600 ~/.ssh/authorized_keys
 ls -l ~/.ssh/ || echo "[entrypoint] ~/.ssh/ does not exist, i.e., no user auth keys found"
 
 echo "[entrypoint] entrypoint sshd checks complete"
+
+echo "[entrypoint] downloading and preparing models from huggingface"
+
+python scripts/download.py --repo_id unsloth/Meta-Llama-3.1-8B || {
+    echo "ERROR: Failed to download model from unsloth/Meta-Llama-3.1-8B"
+    echo "Continuing with next steps..."
+}
+
+python scripts/convert_hf_checkpoint.py --checkpoint_dir ~/checkpoints/unsloth/Meta-Llama-3.1-8B || {
+    echo "ERROR: Failed to convert checkpoint at checkpoints/unsloth/Meta-Llama-3.1-8B"
+    echo "Continuing with next steps..."
+}
