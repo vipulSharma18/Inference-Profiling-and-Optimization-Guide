@@ -513,8 +513,8 @@ def main(
             print(f"Compilation time: {time.perf_counter() - t0:.2f} seconds")
             continue
         if hasattr(prof, "export_chrome_trace"):
-            prof.export_chrome_trace(f"{checkpoint_path.parent.name}_{profile}.json")
-            print(f"\n Execution profile {checkpoint_path.parent.name}_{profile}.json saved.")
+            prof.export_chrome_trace(f"{checkpoint_path.parent.name}_{quantization}_{profile}.json")
+            print(f"\n Execution profile {checkpoint_path.parent.name}_{quantization}_{profile}.json saved.")
 
         device_sync(device=device)  # MKG
         t = time.perf_counter() - t0
@@ -553,12 +553,12 @@ def main(
             else:
                 print("Memory profiling only works on CUDA or XPU devices")
 
-            with open(f"{checkpoint_path.parent.name}_{memory_profile}.pickle", "wb") as f:
+            with open(f"{checkpoint_path.parent.name}_{quantization}_{memory_profile}.pickle", "wb") as f:
                 from pickle import dump
 
                 dump(snapshot, f)
             print(
-                f"\nmemory profile {checkpoint_path.parent.name}_{memory_profile}.pickle saved, to convert that to a usable file, use",
+                f"\nmemory profile {checkpoint_path.parent.name}_{quantization}_{memory_profile}.pickle saved, to convert that to a usable file, use",
                 "python pytorch/torch/cuda/_memory_viz.py trace_plot <pickle file> -o <desired output name>.html",
             )
             break
