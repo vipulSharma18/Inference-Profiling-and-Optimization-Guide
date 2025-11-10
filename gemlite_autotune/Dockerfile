@@ -50,7 +50,7 @@ ENV PATH="/root/.local/bin/:$PATH"
 
 # Accept build arguments for git repo and commit
 ARG GIT_REPO=https://github.com/vipulSharma18/Inference-Profiling-and-Optimization-Worklog.git
-ARG GIT_COMMIT="HEAD"
+ARG GIT_COMMIT="main"
 
 # Set working directory
 WORKDIR /workspace

@@ -60,7 +60,7 @@ RUN git clone --no-checkout ${GIT_REPO} /workspace && \
     cd /workspace && \
     git sparse-checkout init --cone && \
     git sparse-checkout set torchao_float8 common_utils && \
-    git checkout ${GIT_COMMIT}
+    git checkout ${main}
 
 # Install dependencies
 WORKDIR /workspace/torchao_float8
