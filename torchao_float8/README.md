@@ -1,9 +1,8 @@
 # Worklog for TorchAO's Float8WeightOnlyConfig Inference Slowdown Profiling
-
-## The problem:
+## The Problem:
 TorchAO's Float8WeightOnlyConfig has a massive **decrease in inference throughput**, **low memory bandwidth utilization**, and **high peak VRAM** usage.          
 
-TorchAO issue raised after I discovered this problem while working on a [survey of quantization formats](https://github.com/vipulSharma18/Survey-of-Quantization-Formats): [TorchAO GH Issue](https://github.com/pytorch/ao/issues/3288).            
+TorchAO issue raised after I discovered this problem while working on a [survey of quantization formats](https://github.com/vipulSharma18/Survey-of-Quantization-Formats?tab=readme-ov-file#benchmarking-results): [TorchAO GH Issue](https://github.com/pytorch/ao/issues/3288).            
 
 _Example:_ Meta-Llama-3.1-8B inference.
 
@@ -31,22 +30,22 @@ As a first, and possibly only step, we use the GPT-Fast benchmark provided by To
 
 ## Torch Memory Profile
 
-The 0-th inference iteration is profiled with CUDA memory snapshot.
+The 0-th inference iteration is profiled with CUDA memory snapshot. The snapshots are available at the following paths: `llama_benchmark/Meta-Llama-3.1-8B_None_torch_memory_profiler.pickle`, `llama_benchmark/Meta-Llama-3.1-8B_float8dq-tensor_torch_memory_profiler.pickle`, `llama_benchmark/Meta-Llama-3.1-8B_float8wo_torch_memory_profiler.pickle`.
 
-### Baseline
-Snapshot: `llama_benchmark/Meta-Llama-3.1-8B_None_torch_memory_profiler.pickle`
+<div align="center">
+  <img src="figures/none_whole_timeline.png" alt="Baseline Whole Timeline" width="800">
+  <p><strong>Figure 1:</strong> Baseline Whole Timeline</p>
+</div>
 
-![Baseline Whole Timeline](figures/none_whole_timeline.png)
+<div align="center">
+  <img src="figures/float8dq_whole_timeline.png" alt="FP8 Weights and Activations DQ Whole Timeline" width="800">
+  <p><strong>Figure 2:</strong> FP8 Weights and Activations DQ Whole Timeline</p>
+</div>
 
-### FP8 Static Weights and Dynamic Activations Quantization
-Snapshot: `llama_benchmark/Meta-Llama-3.1-8B_float8dq-tensor_torch_memory_profiler.pickle`
-
-![FP8 Weights and Activations DQ Whole Timeline](figures/none_whole_timeline.png)
-
-### FP8 Static Weights Only Quantization
-Snapshot: `llama_benchmark/Meta-Llama-3.1-8B_float8wo_torch_memory_profiler.pickle`
-
-![FP8 Weights Only Static Quantization Whole Timeline](figures/none_whole_timeline.png)
+<div align="center">
+  <img src="figures/float8wo_whole_timeline.png" alt="FP8 Weights Only Static Quantization Whole Timeline" width="800">
+  <p><strong>Figure 3:</strong> FP8 Weights Only Static Quantization Whole Timeline</p>
+</div>
 
 ## Torch Execution Trace
 ### Baseline
