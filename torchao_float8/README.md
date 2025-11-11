@@ -36,16 +36,17 @@ The 0-th inference iteration is profiled with CUDA memory snapshot. The snapshot
   <img src="figures/none_whole_timeline.png" alt="Baseline Whole Timeline" width="800">
   <p><strong>Figure 1:</strong> Baseline Whole Timeline</p>
 </div>
-
 <div align="center">
   <img src="figures/float8dq_whole_timeline.png" alt="FP8 Weights and Activations DQ Whole Timeline" width="800">
   <p><strong>Figure 2:</strong> FP8 Weights and Activations DQ Whole Timeline</p>
 </div>
-
 <div align="center">
   <img src="figures/float8wo_whole_timeline.png" alt="FP8 Weights Only Static Quantization Whole Timeline" width="800">
   <p><strong>Figure 3:</strong> FP8 Weights Only Static Quantization Whole Timeline</p>
 </div>
+
+On first look, comparing the whole timelines in Figures 1, 2, and 3, we can notice that they all have some blocks of memory in the middle of the timeline (encircled). Also, Float8WO has multiple spikes in memory that are not present in the other two snapshots (marked by arrow).
+
 
 ## Torch Execution Trace
 ### Baseline
