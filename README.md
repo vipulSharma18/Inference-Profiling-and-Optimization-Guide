@@ -36,7 +36,7 @@ Each problem has a docker container for reproducibility of the environment and t
 
 ## Principled approach to inference optimization:
 
-Always go from top to bottom, or coarser profiling to fine-grained one, when optimizing inference workloads.
+Always go from top to bottom, or coarser profiling to fine-grained one, when optimizing inference workloads. Below is a list of typical bottlenecks and tricks that arise in inference optimization.
 
 ### Model Serving/User Request Batching Level:
 * Batching of user requests as per the token budget and the type of operation (prefill v/s decode).
