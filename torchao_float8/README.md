@@ -87,10 +87,31 @@ When we try to map these phases to the memory timeline from PyTorch, we can see 
 
 Now that we have one piece of the puzzle, i.e., the **reason for high peak VRAM usage** and solving it with the fusion of GEMV kernel with dequantization kernel, we can proceed to the execution trace to have a look at torch operations level profiling.
 
-## Torch Execution Trace
+## Torch Execution Trace for Operator-Level Profiling
 > [!IMPORTANT]
-> **TLDR**: (WIP)
+> **TLDR**: Dequantization takes up majority of the time in inference.
 
 The last iteration of inference is profiled using PyTorch profiler. The inference files are available at: `llama_benchmark/Meta-Llama-3.1-8B_None_torch_execution_profiler.json`, `llama_benchmark/Meta-Llama-3.1-8B_float8dq-tensor_torch_execution_profiler.json`, `llama_benchmark/Meta-Llama-3.1-8B_float8wo_torch_execution_profiler.json`.
 
-If needed, we can proceed to gather more information via NSYS and NCU profiling (to be decided).
+<div align="center">
+  <img src="figures/prefill_ops_breakdown.png" alt="Prefill Operations Breakdown" width="800">
+  <p><strong>Figure 6:</strong> Prefill Operations Breakdown</p>
+</div>
+
+<div align="center">
+  <img src="figures/prefill_kernel_breakdown.png" alt="Prefill Kernel Breakdown" width="800">
+  <p><strong>Figure 7:</strong> Prefill Kernel Breakdown</p>
+</div>
+
+<div align="center">
+  <img src="figures/decode_cudagraph_kernels.png" alt="Decode CUDAGraph Kernels" width="800">
+  <p><strong>Figure 8:</strong> Decode CUDAGraph Kernels</p>
+</div>
+
+The first thing we see is that the main thread (id 0) has many command buffer full events on its track. Also, there is almost no gap in the different CUDA graph launches and the kernels as can be seen in Figure 8. So, our GPU is definitely not stalled by our CPU and our decode isn't suffering from a kernel launch overhead as expected.
+
+Figure 6 repeats what we saw in our memory analysis, i.e., the `dequantize_affine_float8` operation being the culprit. This time it's responsible for much of the slowdown seen in the inference. Both figures 7 and 8 show a `vectorized_elementwise_kernel` being responsible for the kernel-level slowdown, but it's not very meaningful to draw conclusions from.
+
+As a first step, we can try to reduce the latency of the `dequantize_affine_float8` operation, and fuse it with the GEMV kernel of weights and activations.
+
+> If needed, we can proceed to gather more information via NSYS and NCU profiling (to be decided).
