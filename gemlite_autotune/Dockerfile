@@ -56,7 +56,8 @@ ARG GIT_COMMIT="main"
 WORKDIR /workspace
 
 # Clone the repository with sparse-checkout
-RUN GIT_LFS_SKIP_SMUDGE=1 git clone --no-checkout ${GIT_REPO} /workspace && \
+ENV GIT_LFS_SKIP_SMUDGE=1
+RUN git clone --no-checkout ${GIT_REPO} /workspace && \
     cd /workspace && \
     git sparse-checkout init --cone && \
     git sparse-checkout set gemlite_autotune common_utils && \
