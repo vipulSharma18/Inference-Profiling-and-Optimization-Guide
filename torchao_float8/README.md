@@ -23,7 +23,7 @@ tok/s=160.55, tok/s_decode=169.80, ttft=0.0675, mem/s=1204.97 GB/s, peak_mem= 9.
 **The 3 performance limitations:**
 * Decrease in inference throughput: 7.44 tps v/s 105.73 tps of baseline.
 * Low memory bandwidth utilization: 55.91 GB/s v/s peak theoretical 1792 GB/s.
-* Peak VRAM usage: 26.00 GB v/s 16.30 of the baseline.
+* High peak VRAM usage: 26.00 GB v/s 16.30 of the baseline.
 
 ## The initial PyTorch Trace:
 As a first, and possibly only step, we use the GPT-Fast benchmark provided by TorchAO to profile the memory and execution of the above 3 settings.
@@ -60,6 +60,7 @@ Revisiting the GPT-Fast code in generate.py, we can see there are different phas
 3.2. Dummy inference pass: Decode with frame evaluation by Torch Dynamo, compilation and lowering by Torch Inductor, and subsequent graph recording into a CUDAGraph.       
 4.1. Real inference passes: Prefill like 3.1.       
 4.2. Real inference passes: Decode with quantized model and replay of CUDAGraph Trees.        
+5. The last iteration of inference is profiled with Torch Profiler. This is not relevant to the current memory snapshot analysis.
 
 Note: Both decode stages, 3.2 and 4.2, are also followed by cloning of outputs for optional logits post-processing which takes up minor amount of memory.
 
@@ -84,11 +85,12 @@ When we try to map these phases to the memory timeline from PyTorch, we can see 
 > [!NOTE]
 > **Takeaway**: The FP8 Weights Only Config is not doing dequantization of weights tensor properly. Dequantization of the weights and the computation of product of weights and activations should be fused in the GEMV kernel instead of being done separately to avoid such memory spikes in the GPU VRAM.
 
+Now that we have one piece of the puzzle, i.e., the **reason for high peak VRAM usage** and solving it with the fusion of GEMV kernel with dequantization kernel, we can proceed to the execution trace to have a look at torch operations level profiling.
+
 ## Torch Execution Trace
-### Baseline
+> [!IMPORTANT]
+> **TLDR**: (WIP)
 
-### FP8 Static Weights and Dynamic Activations Quantization
-
-### FP8 Static Weights Only Quantization
+The last iteration of inference is profiled using PyTorch profiler. The inference files are available at: `llama_benchmark/Meta-Llama-3.1-8B_None_torch_execution_profiler.json`, `llama_benchmark/Meta-Llama-3.1-8B_float8dq-tensor_torch_execution_profiler.json`, `llama_benchmark/Meta-Llama-3.1-8B_float8wo_torch_execution_profiler.json`.
 
 If needed, we can proceed to gather more information via NSYS and NCU profiling (to be decided).
