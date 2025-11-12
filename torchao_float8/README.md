@@ -116,4 +116,6 @@ As a first step, we can try to reduce the latency of the `dequantize_affine_floa
 
 The lack of information from the trace files is probably due to the simple nature of inference, and the profiling script not having `with_stacks` option as True.
 
-> If needed, we can proceed to gather more information via NSYS and NCU profiling (to be decided).
+Just for learning purposes, subsequent profiling is being done in NSYS.
+
+## NSYS Profiling with Updated Kernel
