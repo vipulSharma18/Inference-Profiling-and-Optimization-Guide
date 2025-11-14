@@ -1,6 +1,6 @@
 # Worklog for TorchAO's Float8WeightOnlyConfig Inference Slowdown Profiling
 ## The Problem:
-TorchAO's Float8WeightOnlyConfig has a massive **decrease in inference throughput**, **low memory bandwidth utilization**, and **high peak VRAM** usage.          
+TorchAO's (version 0.13.0) Float8WeightOnlyConfig has a massive **decrease in inference throughput**, **low memory bandwidth utilization**, and **high peak VRAM** usage. This problem doesn't exist in version 0.14.1 and above.          
 
 TorchAO issue raised after I discovered this problem while working on a [survey of quantization formats](https://github.com/vipulSharma18/Survey-of-Quantization-Formats?tab=readme-ov-file#benchmarking-results): [TorchAO GH Issue](https://github.com/pytorch/ao/issues/3288).            
 
